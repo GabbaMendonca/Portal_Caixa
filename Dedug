@@ -1,0 +1,21 @@
+// ==UserScript==
+// @name New Script
+// @namespace Violentmonk Scripts
+// @match file:///C:/Users/Fernando/Documents/bot/PesquisaSolicitacaoReparoWs1.aspx
+// @grant none
+// ==/UserScript==
+
+var abertura = document.getElementById("ctl00_ContentPlaceHolder1_lblDataCriacao").innerText;
+var data = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtInicioAtendimento_dateInput").value;
+
+
+var status = document.getElementById("ctl00_ContentPlaceHolder1_txtObservacaoStatus").value;
+
+window.alert(abertura.length);
+window.alert(data.length);
+
+var novoValor = abertura.concat(" ", data);
+
+window.alert(novoValor.length);
+
+status = 'conteudo alterado';
