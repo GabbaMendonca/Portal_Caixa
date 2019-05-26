@@ -1,0 +1,50 @@
+// ==UserScript==
+// @name New Script
+// @match https://rtping.telemar.net.br/rtping_rot.php
+// @grant none
+// ==/UserScript==
+
+// (function(){ })
+// 
+// 
+// var local = document.getElementById("myAnchor");
+// 
+// var teste = document.createElement("A"); 
+//  teste.text = "Preencher";
+//  
+// classe que fica os logs -> .consolebottom
+// 
+
+
+// Criar e Inserir botão na página
+var botao = document.createElement("BUTTON");
+var t = document.createTextNode("copiar log");
+botao.appendChild(t);
+botao.id = "copiarLog";
+document.body.appendChild(botao);
+
+
+var copyTextareaBtn =  document.getElementById('copiarLog');
+
+function novaarea(meutexto) {
+  var x = document.createElement("TEXTAREA");
+  var log = document.createTextNode(""+meutexto);
+  x.appendChild(log);
+  document.body.appendChild(x);
+}
+
+copyTextareaBtn.addEventListener('click', function(event) {
+  var copyTextarea = document.querySelector('.consolebottom');
+  //copyTextarea.contentEditable = "true";
+  novaarea(copyTextarea.innerText);
+  copyTextarea.focus();
+  copyTextarea.select();
+
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Copying text command was ' + msg);
+  } catch (err) {
+    console.log('Oops, unable to copy');
+  }
+});
