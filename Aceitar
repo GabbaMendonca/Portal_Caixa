@@ -1,0 +1,34 @@
+// ==UserScript==
+// @name New Script
+// @namespace morph
+// @match http://portalcef.oi.net.br/AceiteSolicitacao.aspx
+// @grant none
+// ==/UserScript==
+
+
+//<div class="rgWrap rgInfoPart">
+//Página 1 de 1, linha 1 à 8 de 8
+//</div>
+
+
+var quantidade = document.getElementsByClassName("rgInfoPart").item(0).textContent.split(" ");
+
+var novaTAG = document.getElementById("ctl00_lblTitulo");
+
+novaTAG.style.fontSize = "xx-large";
+
+if(quantidade[10] < 10)
+  {
+    novaTAG.style.color = "green";
+  }
+else if (quantidade[10] < 20)
+         {
+           novaTAG.style.color = "yellow";
+         }
+else{
+novaTAG.style.color = "red";
+}
+
+novaTAG.innerHTML = "Total "+quantidade[10];
+
+setTimeout(function () { location.href = location.href; }, 30000);
