@@ -1,0 +1,152 @@
+// ==UserScript==
+// @name New Script
+// @namespace Scripts Portal
+// @match file:///C:/Users/Fernando/Documents/bot/PesquisaSolicitacaoReparoWs.aspx.htm
+// @match http://portalcef.oi.net.br/PesquisaSolicitacaoReparoWs.aspx
+// @grant none
+// ==/UserScript==
+
+/*
+ * Alterações no funcionamento do portal Caixa para melhorar e agilizar
+ * o atendimento aos chamados.
+ *
+ * TODO:
+ * 	- preenchimento automático ao pegar chamado.
+     * - acionar
+     * 
+ * 	- gerar mascara abertura e encerramento
+ * 	- método KISS
+ *  - copiar datas do "previsão de atendimento".
+ *
+ * BUGS: 
+ * 	- Campos de data e telefone preenchem mas não salvam sem intervenção
+ * 	- 
+ */
+
+
+var designacao = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe17");
+//var protocolo = document.getElementById("ctl00_ContentPlaceHolder1_lblProtocolo").innerText;
+var estado = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe21").value;
+var responsavel = document.getElementById("ctl00_lblNome");
+var res = responsavel.textContent.split(" ");
+
+var ponto = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe19").value;
+
+
+var rtping = "https://rtping.telemar.net.br/rtping_rot.php?tipo=roteadores&opcao=ccto&circuito="+ designacao.value+"%20&Enviar=Ok";
+var oi360 = "http://10.111.26.12/oi360s/notes?search="+designacao.value;
+
+var reclamacao = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe1").value;
+
+var titullo = document.getElementById("ctl00_lblTitulo");
+titullo.innerHTML = "<a id='assumir' href='#'>Assumir</a> | ";
+titullo.innerHTML += "<a id='rtping' href='"+rtping+"' target='_blank:'>RTPing</a> | ";
+titullo.innerHTML += "<a id='oi360' href='"+oi360+"' target='_blank:1'>Oi360</a> | ";
+titullo.innerHTML += reclamacao + " | ";
+titullo.innerHTML += "<a id='abreBd' href='#'>MascaraBD</a> | <br>";
+titullo.innerHTML += "Ponto: " + ponto + " ";
+
+titullo.style.fontSize = "medium"; 
+
+var preencher = document.getElementById("assumir");
+var abre = document.getElementById("abreBd");
+
+/*
+ */
+preencher.onclick = function(){
+// valores
+var abertura = document.getElementById("ctl00_ContentPlaceHolder1_lblDataCriacao").innerText;
+
+var estado = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe21").value;
+var rede = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe3").value.split(" ");
+var data1 = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtInicioAtendimento_dateInput");
+var data2 = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtPrevAtendimento_dateInput");
+var data3 = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtFimAtendimento_dateInput");
+var data4 = document.getElementById("ctl00_ContentPlaceHolder1_rdpAgendamentoData_dateInput");
+var protocolo = document.getElementById("ctl00_ContentPlaceHolder1_txtProtocoloOi");
+
+//.value = estado + rede[1] + " - " + designacao.value ;
+//.value = res[1] + " " + estado  + rede[1] + " - " + designacao.value ;
+protocolo.value = designacao.value + "-. " + estado + rede[1] +" "+ res[1];
+  
+// campos para preencher
+// responsavel
+document.getElementById("ctl00_ContentPlaceHolder1_txtTecnicoResp").value = res[1].toUpperCase();
+// datas
+data1.value = abertura;
+data2.value = abertura;
+data3.value = abertura;
+data4.value = abertura;
+// contato
+document.getElementById("ctl00_ContentPlaceHolder1_txtAgendamentoContato").value = "0800 282 5231 op. 4" ;
+document.getElementById("ctl00_ContentPlaceHolder1_txtAgendamentoTel").value = "(11)11111111_";
+
+window.open(rtping, '_blank:');
+// SALVA
+document.getElementById("ctl00_ContentPlaceHolder1_imbSalvarAquisicao").click();
+
+};
+
+
+document.getElementById("ctl00_ContentPlaceHolder1_rdpDtPrevAtendimento_dateInput").onblur = function(){
+  //window.alert(this.value);
+  document.getElementById("ctl00_ContentPlaceHolder1_rdpDtInicioAtendimento_dateInput").value = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtPrevAtendimento_dateInput").value;
+  document.getElementById("ctl00_ContentPlaceHolder1_rdpDtFimAtendimento_dateInput").value = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtPrevAtendimento_dateInput").value;
+  document.getElementById("ctl00_ContentPlaceHolder1_rdpAgendamentoData_dateInput").value = document.getElementById("ctl00_ContentPlaceHolder1_rdpDtPrevAtendimento_dateInput").value;
+}
+
+  function fechar(){
+    document.getElementsByClassName("janela").style.display = "none";
+  }
+/* criar elemento na página */
+function mascaraBd(){
+  
+
+  var requisicao = document.getElementById("ctl00_ContentPlaceHolder1_txtNumRequisicao");
+  var protocolo = document.getElementById("ctl00_ContentPlaceHolder1_lblProtocolo").innerText;
+  var testes = document.getElementById("ctl00_ContentPlaceHolder1_txtObservacaoStatus").value;
+  /* inicio da mascara */
+  var mascara = "Colaborador: Tec. "+res[1]+" - TR664684\n";
+  mascara += "Reincidente: NÃO \n";
+  mascara += "Proativo: NÃO \n";
+  mascara += "Reclamante: CGR 11 3184-5660 / PONTOS FOCAIS - 3184 5692 / 5638 \n";
+  mascara += "Telefone p/ Testes: RI - PTFA  0800 282 5626 / RII - 0800 642 1119 op. 2/1\n";
+  mascara += designacao.value+ "\n";
+  mascara += "Horario de Acesso: 8:00 as 18:00\n";
+  mascara += "Reclamacao: " +reclamacao+ "\n" ;
+  mascara += "Diagnostico Rede: \n"+testes+" \n";
+  mascara += "OPERADORA (OEMP): \n";
+  mascara += "DESIGNACAO LASTMILE(OEMP): \n";
+  mascara += "Encerramento/Aprazamento: 0800 282 5231 op. 1/3/1 \n";
+  mascara += "Chamado no cliente: %$"+protocolo+"//"+requisicao.value+"$%";
+
+  var novaDiv = document.createElement("div");
+  var att = document.createAttribute("class");
+  att.value = "janela";
+  novaDiv.setAttributeNode(att);
+  
+  novaDiv.setAttribute("style","background-color:white; \
+                       border:1px solid red; \
+                       position:fixed; \
+                       left:0px;\
+                       top: 0px;\
+                       z-index: 6001; \
+                       ");
+  //                       width:650px; \
+  //                     height:400px; \
+  
+  
+  novaDiv.innerHTML = "<textarea style='width:480px;height:400px; font-family=monospace'>" + mascara;
+  novaDiv.innerHTML += "</textarea>";
+  novaDiv.innerHTML += "<button disabled >Copiar</button>";
+  
+  var btnFechar = document.createElement("button");
+  var t = document.createTextNode("Fechar");       // Create a text node
+  btnFechar.appendChild(t);
+  btnFechar.onclick = function(){novaDiv.style.display = "none";}
+  
+  novaDiv.appendChild(btnFechar);
+  document.body.insertBefore(novaDiv,document.body.firstChild);
+}
+
+abre.onclick = mascaraBd;
