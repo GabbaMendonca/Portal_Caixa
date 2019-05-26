@@ -1,0 +1,66 @@
+// ==UserScript==
+// @name Portal Caixa
+// @namespace Violentmonkey Scripts
+// @match http://portalcef.oi.net.br/PesquisaSolicitacaoReparoWs.aspx
+// @grant none
+// ==/UserScript==
+
+//var designacao = document.getElementById("ctl00_ContentPlaceHolder1_txtDetalhe17");
+//var requisicao = document.getElementById("ctl00_ContentPlaceHolder1_txtNumRequisicao");
+
+//var protocolo = document.getElementById("ctl00_ContentPlaceHolder1_lblProtocolo");
+//var abertura = document.getElementById("ctl00_ContentPlaceHolder1_lblDataCriacao");
+
+//designacao.disabled = false;
+//requisicao.disabled = false;
+
+function leitura(){
+  
+    var inputs=document.getElementsByTagName('input');
+    for(i=0;i<inputs.length;i++){
+         if(inputs[i].disabled){
+           //inputs[i].disabled=!inputs[i].disabled;
+           
+           inputs[i].disabled = false;
+           //inputs[i].readOnly = true;
+         }
+    }
+
+    var area=document.getElementsByTagName('textarea');
+    for(i=0;i<area.length;i++){
+        area[i].disabled = false;
+        //area[i].readOnly=true;
+    }
+}
+
+leitura();
+
+var botao = document.getElementById("ctl00_lblNome");
+
+
+//botao.addEventListener("click", leitura();); 
+
+
+botao.onclick=function(){
+  
+    var inputs=document.getElementsByTagName('input');
+    for(i=0;i<inputs.length;i++){
+         if(inputs[i].disabled){
+           //inputs[i].disabled=!inputs[i].disabled;
+           
+           inputs[i].disabled = false;
+           //inputs[i].readOnly = true;
+         }
+    }
+
+    var area=document.getElementsByTagName('textarea');
+    for(i=0;i<area.length;i++){
+        area[i].disabled = false;
+        //area[i].readOnly=true;
+    }
+}
+
+
+//<button onclick="myFunction()">Click me</button>
+//var atualizar = document.getElementById("ctl00_ContentPlaceHolder1_imbSalvarAquisicao");
+//atualizar.setAttribute("type", "button");
